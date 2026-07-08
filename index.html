@@ -440,14 +440,14 @@
     </div>
     <form id="orderForm" class="reveal">
       <div class="row-2">
-        <div class="field"><label for="fromCity">Откуда</label><input id="fromCity" name="Откуда" type="text" placeholder="Город отправления" required></div>
-        <div class="field"><label for="toCity">Куда</label><input id="toCity" name="Куда" type="text" placeholder="Город назначения" required></div>
+        <div class="field"><label for="fromCity">Откуда</label><input id="fromCity" name="Otkuda" type="text" placeholder="Город отправления" required></div>
+        <div class="field"><label for="toCity">Куда</label><input id="toCity" name="Kuda" type="text" placeholder="Город назначения" required></div>
       </div>
       <div class="row-2">
-        <div class="field"><label for="weight">Вес груза, кг</label><input id="weight" name="Вес груза (кг)" type="number" placeholder="500" required></div>
-        <div class="field"><label for="phone">Телефон</label><input id="phone" name="Телефон" type="tel" placeholder="+7 900 000-00-00" required></div>
+        <div class="field"><label for="weight">Вес груза, кг</label><input id="weight" name="Ves_kg" type="number" placeholder="500" required></div>
+        <div class="field"><label for="phone">Телефон</label><input id="phone" name="Telefon" type="tel" placeholder="+7 900 000-00-00" required></div>
       </div>
-      <div class="field"><label for="name">Имя</label><input id="name" name="Имя" type="text" placeholder="Как к вам обращаться" required></div>
+      <div class="field"><label for="name">Имя</label><input id="name" name="Imya" type="text" placeholder="Как к вам обращаться" required></div>
       <button type="submit" class="submit-btn">Отправить заявку</button>
       <div class="form-msg" id="formMsg"></div>
     </form>
@@ -485,9 +485,17 @@
     const name = document.getElementById('name').value.trim();
 
     msg.textContent = 'Отправляем заявку…';
-    const data = new FormData(form);
+    const fromCity = document.getElementById('fromCity').value.trim();
+    const toCity = document.getElementById('toCity').value.trim();
+    const weight = document.getElementById('weight').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    const data = new FormData();
     data.append('access_key', WEB3FORMS_KEY);
     data.append('subject', 'Новая заявка с сайта Магистраль');
+    data.append('message',
+      `Имя: ${name}\nТелефон: ${phone}\nОткуда: ${fromCity}\nКуда: ${toCity}\nВес груза: ${weight} кг`
+    );
 
     try{
       const res = await fetch('https://api.web3forms.com/submit', {
