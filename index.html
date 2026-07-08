@@ -1,119 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Магистраль — грузоперевозки по России</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:        #1C2127;
+    --ink-2:      #2B323B;
+    --paper:      #F1EDE4;
+    --paper-2:    #E7E1D2;
+    --amber:      #FFB020;
+    --amber-dark: #C97C00;
+    --line:       #8A93A0;
+    --ok:         #4C9A6A;
+    --radius: 2px;
+  }
 
-МАГИСТРАЛЬ
-ЗАЯВКА
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:'Inter', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.stencil{
+    font-family:'Oswald', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{ color:inherit; text-decoration:none; }
+  img,svg{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; border:none; }
+  :focus-visible{ outline:3px solid var(--amber); outline-offset:2px; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
 
-ГРУЗОПЕРЕВОЗКИ ПО РОССИИ
-ГРУЗ ВЫЕЗЖАЕТ ПО РАСПИСАНИЮ, БЕЗ «ЗАВТРА»
-Собираем сборные грузы, берём догруз и негабарит. Отслеживание в реальном времени, электронная накладная и водитель на связи от погрузки до подписи получателя.
-РАССЧИТАТЬ СТОИМОСТЬ
-Посмотреть маршруты →
-14
-ЛЕТ НА МАРШРУТЕ
-38 400+
-ДОСТАВЛЕННЫХ ГРУЗОВ
-96
-ГОРОДОВ ПОКРЫТИЯ
-98.2%
-ТОЧНОСТЬ В СРОК
-УСЛУГИ
-ОДИН ПЕРЕВОЗЧИК НА ВЕСЬ МАРШРУТ
-От одной паллеты до полной фуры — подбираем формат под груз, а не наоборот.
-01 / LTL
-Сборные грузы
-Отправляем от 1 паллеты. Груз консолидируется на терминале и уходит по расписанию, без ожидания полной загрузки борта.
-02 / FTL
-Догруз и попутный транспорт
-Используем свободное место в машинах, которые уже идут по вашему направлению — это снижает стоимость километра.
-03 / OOG
-Негабарит и спецтехника
-Трал, тентованные площадки, сопровождение и согласование габаритов — берём грузы, от которых отказываются другие.
-04 / INTL
-Международные перевозки
-Таможенное оформление, мультимодальные схемы, работа с СНГ и ЕАЭС по прозрачным ставкам.
-ПРОЦЕСС
-ЧЕТЫРЕ ШАГА ОТ ЗАЯВКИ ДО ПОДПИСИ
-Каждый этап виден в личном кабинете — не нужно звонить и спрашивать «где машина».
-01
-Заявка
-Указываете маршрут, вес и тип груза — менеджер перезванивает в течение 15 минут.
-02
-Расчёт и подтверждение
-Фиксируем ставку и сроки, присылаем договор и электронную накладную.
-03
-Погрузка и отслеживание
-Груз маркируется, водитель на связи, координаты машины видны в кабинете.
-04
-Доставка и подпись
-Получатель подписывает накладную на месте — вы видите статус «доставлено» сразу.
-ГЕОГРАФИЯ
-РЕГУЛЯРНЫЕ МАРШРУТЫ
-Ходим по расписанию — не только «от склада до склада», а по фиксированным дням недели.
-Москва
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+  }
 
-Санкт-Петербург
-712 км
-Москва
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(28,33,39,0.96);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(255,176,32,0.25);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px; max-width:1120px; margin:0 auto;
+  }
+  .brand{
+    color:var(--paper); font-size:22px; font-weight:700; display:flex; align-items:center; gap:10px;
+  }
+  .brand .dot{ width:10px; height:10px; background:var(--amber); border-radius:50%; box-shadow:0 0 12px var(--amber); }
+  .nav-links{ display:flex; gap:32px; }
+  .nav-links a{ color:var(--paper); font-size:14px; letter-spacing:0.03em; opacity:0.85; transition:opacity .2s; }
+  .nav-links a:hover{ opacity:1; color:var(--amber); }
+  .nav-cta{
+    background:var(--amber); color:var(--ink); font-weight:700; font-size:13px;
+    padding:10px 18px; text-transform:uppercase; letter-spacing:0.05em;
+    border-radius:var(--radius);
+  }
+  .nav-toggle{ display:none; }
 
-Екатеринбург
-1 780 км
-Казань
+  .hero{
+    position:relative;
+    background:var(--ink); color:var(--paper);
+    padding:96px 24px 120px;
+    overflow:hidden;
+  }
+  .hero-inner{ max-width:1120px; margin:0 auto; position:relative; z-index:2; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.12em;
+    color:var(--amber); text-transform:uppercase; margin-bottom:20px;
+  }
+  .eyebrow::before{ content:''; width:24px; height:2px; background:var(--amber); }
+  .hero h1{
+    font-size:clamp(40px, 6.2vw, 84px);
+    font-weight:700; line-height:0.98; max-width:900px;
+    margin-bottom:28px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--amber); }
+  .hero p.lead{
+    font-size:18px; color:#C9CDD3; max-width:520px; margin-bottom:40px;
+  }
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  .btn-primary{
+    background:var(--amber); color:var(--ink); font-weight:700; font-size:14px;
+    text-transform:uppercase; letter-spacing:0.04em; padding:16px 30px;
+    border-radius:var(--radius); transition:transform .15s, background .15s;
+  }
+  .btn-primary:hover{ background:#FFC24D; transform:translateY(-2px); }
+  .btn-ghost{
+    color:var(--paper); font-size:14px; font-weight:600; padding:16px 8px;
+    border-bottom:1px solid var(--line);
+  }
+  .btn-ghost:hover{ border-color:var(--amber); color:var(--amber); }
 
-Новосибирск
-2 460 км
-Ростов-на-Дону
+  .route-bg{ position:absolute; inset:0; z-index:1; opacity:0.9; }
+  .route-path{
+    fill:none; stroke:var(--line); stroke-width:2; stroke-dasharray:10 10;
+    opacity:0.35;
+  }
+  .route-dot{ fill:var(--amber); }
+  .truck-marker{ offset-rotate: 0deg; animation: drive 9s linear infinite; }
+  @keyframes drive{
+    0%{ offset-distance:0%; }
+    100%{ offset-distance:100%; }
+  }
 
-Краснодар
-280 км
-Нижний Новгород
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:rgba(255,255,255,0.08); margin-top:72px; border-radius:var(--radius); overflow:hidden;
+  }
+  .stat{ background:var(--ink-2); padding:24px 20px; }
+  .stat .num{ font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; color:var(--amber); }
+  .stat .label{ font-size:12px; color:#AEB4BC; text-transform:uppercase; letter-spacing:0.04em; margin-top:6px; }
 
-Самара
-460 км
-ТАРИФЫ
-ПРОЗРАЧНАЯ СТАВКА БЕЗ ДОПЛАТ
-Цена фиксируется в накладной на этапе подтверждения заявки.
-НАКЛ. № TR-0104-STD
-Эконом
-от 9 ₽/км
-	•	Сборный груз, срок 3–7 дней Стандартное отслеживание Электронная накладная
-Выбрать тариф
-В СРОК
-ГАРАНТ НАКЛ. № TR-0104-EXP
-Стандарт
-от 14 ₽/км
-	•	Отдельная машина, срок 1–3 дня GPS-трекинг в реальном времени Персональный менеджер Страхование груза включено
-Выбрать тариф
-НАКЛ. № TR-0104-OOG
-Негабарит
-по запросу
-	•	Спецтранспорт и трал Сопровождение и согласования Индивидуальный расчёт
-Запросить расчёт
-ОТЗЫВЫ
-ЧТО ГОВОРЯТ ТЕ, КТО УЖЕ ВОЗИТ С НАМИ
-«За два года — ни одной сорванной отгрузки. Даже в декабре, когда все остальные переносят сроки.»
-Ирина Соколова
-Логист, мебельное производство
-«Возим негабарит раз в квартал — раньше это был отдельный головняк. Теперь просто оставляем заявку.»
-Алексей Дронов
-Директор, завод металлоконструкций
-«Трекинг в кабинете реально работает — координаты машины видно, а не «уточню у водителя».»
-Марина Ким
-Закупки, розничная сеть
-ЗАЯВКА
-РАССЧИТАЕМ СТОИМОСТЬ ЗА 15 МИНУТ
-Оставьте маршрут и вес груза — перезвоним и зафиксируем ставку.
-+7 (495) 000-00-00
-заявки@magistral-cargo.ru
-ОТКУДА
-КУДА
-ВЕС ГРУЗА, КГ
-ТЕЛЕФОН
-ИМЯ
-ОТПРАВИТЬ ЗАЯВКУ
+  section{ padding:96px 0; }
+  .section-head{ max-width:600px; margin-bottom:56px; }
+  .section-head .eyebrow{ color:var(--amber-dark); }
+  .section-head .eyebrow::before{ background:var(--amber-dark); }
+  .section-head h2{ font-size:clamp(30px,4vw,46px); font-weight:600; color:var(--ink); }
+  .section-head p{ color:#5B6270; margin-top:14px; font-size:16px; }
 
-МАГИСТРАЛЬ · грузоперевозки
-Услуги
-Маршруты
-Тарифы
-Заявка
-© 2026 Магистраль. Все права защищены.
-Это демонстрационный сайт-шаблон. Реквизиты, тарифы и отзывы — примерные, замените на свои перед публикацией.
+  .services-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:2px; background:var(--paper-2); border-radius:var(--radius); overflow:hidden; }
+  .service-card{
+    background:var(--paper); padding:36px 32px; transition:background .2s;
+    border-left:3px solid transparent;
+  }
+  .service-card:hover{ background:#fff; border-left-color:var(--amber); }
+  .service-card .tag{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--amber-dark); }
+  .service-card h3{ font-size:22px; font-weight:600; margin:10px 0 12px; text-transform:none; letter-spacing:0; }
+  .service-card p{ font-size:14.5px; color:#5B6270; }
+
+  .process{ background:var(--ink); color:var(--paper); }
+  .process .section-head h2{ color:var(--paper); }
+  .process .section-head p{ color:#AEB4BC; }
+  .process-steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+  .process-steps::before{
+    content:''; position:absolute; top:22px; left:0; right:0; height:1px;
+    background:repeating-linear-gradient(to right, var(--line) 0 10px, transparent 10px 20px);
+  }
+  .step{ padding-right:24px; position:relative; }
+  .step .idx{
+    font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--amber);
+    width:44px; height:44px; border:1px solid var(--amber); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; background:var(--ink);
+    position:relative; z-index:2; margin-bottom:20px;
+  }
+  .step h3{ font-size:17px; font-weight:600; text-transform:none; letter-spacing:0; margin-bottom:8px; }
+  .step p{ font-size:13.5px; color:#AEB4BC; }
+
+  .routes-list{ border-top:1px solid var(--paper-2); }
+  .route-row{
+    display:grid; grid-template-columns:1.2fr 40px 1.2fr 100px; align-items:center;
+    padding:20px 0; border-bottom:1px solid var(--paper-2); gap:16px;
+  }
+  .route-row .city{ font-size:18px; font-weight:600; }
+  .route-row .city.from{ text-align:left; }
+  .route-row .city.to{ text-align:left; }
+  .route-line-mini{ height:1px; background:repeating-linear-gradient(to right, var(--line) 0 6px, transparent 6px 12px); position:relative; }
+  .route-line-mini::after{ content:'▸'; position:absolute; right:-4px; top:-9px; color:var(--amber-dark); font-size:14px; }
+  .route-row .km{ font-family:'JetBrains Mono',monospace; text-align:right; color:var(--amber-dark); font-weight:700; }
+
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .waybill{
+    background:#fff; border:1px solid var(--paper-2); position:relative;
+    padding:32px 28px 28px; border-radius:var(--radius);
+    box-shadow:0 1px 0 var(--paper-2);
+  }
+  .waybill.featured{ border-color:var(--amber); box-shadow:0 0 0 2px var(--amber); }
+  .waybill::before{
+    content:''; position:absolute; top:0; left:24px; right:24px; height:0;
+    border-top:2px dashed var(--paper-2);
+  }
+  .waybill .doc-id{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--line); letter-spacing:0.05em; }
+  .waybill .tier{ font-size:24px; font-weight:600; margin:8px 0 4px; }
+  .waybill .price{ font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:var(--ink); margin:14px 0; }
+  .waybill .price span{ font-size:14px; color:var(--line); font-weight:400; }
+  .waybill ul{ list-style:none; margin:20px 0 28px; }
+  .waybill li{ font-size:14px; color:#454C58; padding:8px 0; border-bottom:1px dotted var(--paper-2); display:flex; gap:8px; }
+  .waybill li::before{ content:'—'; color:var(--amber-dark); }
+  .waybill .stamp{
+    position:absolute; top:28px; right:24px; width:56px; height:56px; border-radius:50%;
+    border:2px solid var(--ok); color:var(--ok); font-family:'JetBrains Mono',monospace;
+    font-size:9px; display:flex; align-items:center; justify-content:center; text-align:center;
+    transform:rotate(-14deg); opacity:0.7; letter-spacing:0.03em;
+  }
+  .waybill-cta{
+    display:block; text-align:center; background:var(--ink); color:var(--paper);
+    padding:13px; font-weight:600; font-size:14px; border-radius:var(--radius);
+  }
+  .waybill.featured .waybill-cta{ background:var(--amber); color:var(--ink); }
+
+  .testimonials{ background:var(--paper-2); }
+  .test-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .test-card{ background:var(--paper); padding:28px; border-radius:var(--radius); }
+  .test-card p.quote{ font-size:15px; color:#33383F; margin-bottom:20px; }
+  .test-card .who{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--line); }
+  .test-card .who b{ color:var(--ink); font-family:'Inter',sans-serif; font-size:14px; display:block; }
+
+  .order{ background:var(--ink); color:var(--paper); }
+  .order-inner{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+  .order h2{ font-size:clamp(28px,4vw,42px); font-weight:600; margin-bottom:16px; }
+  .order p{ color:#AEB4BC; margin-bottom:28px; max-width:420px; }
+  .order-contact{ font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--amber); margin-top:24px; }
+  form{ display:flex; flex-direction:column; gap:14px; }
+  .field label{ display:block; font-size:12px; color:#AEB4BC; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+  .field input{
+    width:100%; background:var(--ink-2); border:1px solid #3D4754; color:var(--paper);
+    padding:13px 14px; border-radius:var(--radius); font-size:14px; font-family:inherit;
+  }
+  .field input:focus{ border-color:var(--amber); }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .submit-btn{
+    background:var(--amber); color:var(--ink); font-weight:700; text-transform:uppercase;
+    letter-spacing:0.04em; padding:15px; border-radius:var(--radius); margin-top:6px; font-size:14px;
+  }
+  .submit-btn:hover{ background:#FFC24D; }
+  .form-msg{ font-size:13px; margin-top:10px; font-family:'JetBrains Mono',monospace; min-height:18px; }
+  .form-msg.ok{ color:var(--ok); }
+
+  footer{ background:#151A1F; color:#8A93A0; padding:48px 0 28px; font-size:13px; }
+  .footer-top{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; padding-bottom:28px; border-bottom:1px solid #262D35; margin-bottom:20px; }
+  .footer-top .brand{ color:var(--paper); }
+  .footer-links{ display:flex; gap:24px; }
+  .footer-links a:hover{ color:var(--amber); }
+  .disclaimer{ opacity:0.6; font-size:11.5px; margin-top:8px; }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  @media (max-width: 860px){
+    .nav-links{ display:none; }
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .services-grid{ grid-template-columns:1fr; }
+    .process-steps{ grid-template-columns:1fr; gap:28px; }
+    .process-steps::before{ display:none; }
+    .route-row{ grid-template-columns:1fr 24px 1fr; font-size:14px; }
+    .route-row .km{ grid-column:1 / -1; text-align:left; margin-top:4px; }
+    .pricing-grid{ grid-template-columns:1fr; }
+    .test-grid{ grid-template-columns:1fr; }
+    .order-inner{ grid-template-columns:1fr; }
+    .row-2{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span><span id="brand-text">МАГИСТРАЛЬ</span></div>
+    <div class="nav-links">
+      <a href="#services">Услуги</a>
+      <a href="#process">Как это работает</a>
+      <a href="#routes">Маршруты</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#reviews">Отзывы</a>
+    </div>
+    <a href="#order" class="nav-cta">Заявка</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <svg class="route-bg" viewBox="0 0 1120 560" preserveAspectRatio="none">
+    <path id="heroRoute" class="route-path" d="M -20 480 C 200 460, 260 300, 420 320 S 640 200, 760 210 S 1000 80, 1140 60"/>
+    <circle class="route-dot" cx="-20" cy="480" r="5"/>
+    <circle class="route-dot" cx="1140" cy="60" r="5"/>
+    <circle class="truck-marker" r="6" fill="#FFB020" style="offset-path:path('M -20 480 C 200 460, 260 300, 420 320 S 640 200, 760 210 S 1000 80, 1140 60');"/>
+  </svg>
+  <div class="hero-inner">
+    <span class="eyebrow">Грузоперевозки по России</span>
+    <h1 id="hero-title">Груз выезжает<br>по расписанию, <em>без «завтра»</em></h1>
+    <p class="lead" id="hero-lead">Собираем сборные грузы, берём догруз и негабарит. Отслеживание в реальном времени, электронная накладная и водитель на связи от погрузки до подписи получателя.</p>
+    <div class="hero-actions">
+      <a href="#order" class="btn-primary">Рассчитать стоимость</a>
+      <a href="#routes" class="btn-ghost">Посмотреть маршруты →</a>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat"><div class="num" id="stat-years">14</div><div class="label">лет на маршруте</div></div>
+      <div class="stat"><div class="num" id="stat-deliveries">38 400+</div><div class="label">доставленных грузов</div></div>
+      <div class="stat"><div class="num" id="stat-cities">96</div><div class="label">городов покрытия</div></div>
+      <div class="stat"><div class="num" id="stat-ontime">98.2%</div><div class="label">точность в срок</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Услуги</span>
+      <h2>Один перевозчик на весь маршрут</h2>
+      <p>От одной паллеты до полной фуры — подбираем формат под груз, а не наоборот.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="tag">01 / LTL</span>
+        <h3>Сборные грузы</h3>
+        <p>Отправляем от 1 паллеты. Груз консолидируется на терминале и уходит по расписанию, без ожидания полной загрузки борта.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="tag">02 / FTL</span>
+        <h3>Догруз и попутный транспорт</h3>
+        <p>Используем свободное место в машинах, которые уже идут по вашему направлению — это снижает стоимость километра.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="tag">03 / OOG</span>
+        <h3>Негабарит и спецтехника</h3>
+        <p>Трал, тентованные площадки, сопровождение и согласование габаритов — берём грузы, от которых отказываются другие.</p>
+      </div>
+      <div class="service-card reveal">
+        <span class="tag">04 / INTL</span>
+        <h3>Международные перевозки</h3>
+        <p>Таможенное оформление, мультимодальные схемы, работа с СНГ и ЕАЭС по прозрачным ставкам.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Процесс</span>
+      <h2>Четыре шага от заявки до подписи</h2>
+      <p>Каждый этап виден в личном кабинете — не нужно звонить и спрашивать «где машина».</p>
+    </div>
+    <div class="process-steps">
+      <div class="step reveal"><div class="idx">01</div><h3>Заявка</h3><p>Указываете маршрут, вес и тип груза — менеджер перезванивает в течение 15 минут.</p></div>
+      <div class="step reveal"><div class="idx">02</div><h3>Расчёт и подтверждение</h3><p>Фиксируем ставку и сроки, присылаем договор и электронную накладную.</p></div>
+      <div class="step reveal"><div class="idx">03</div><h3>Погрузка и отслеживание</h3><p>Груз маркируется, водитель на связи, координаты машины видны в кабинете.</p></div>
+      <div class="step reveal"><div class="idx">04</div><h3>Доставка и подпись</h3><p>Получатель подписывает накладную на месте — вы видите статус «доставлено» сразу.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="routes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">География</span>
+      <h2>Регулярные маршруты</h2>
+      <p>Ходим по расписанию — не только «от склада до склада», а по фиксированным дням недели.</p>
+    </div>
+    <div class="routes-list">
+      <div class="route-row reveal"><span class="city from">Москва</span><span class="route-line-mini"></span><span class="city to">Санкт-Петербург</span><span class="km">712 км</span></div>
+      <div class="route-row reveal"><span class="city from">Москва</span><span class="route-line-mini"></span><span class="city to">Екатеринбург</span><span class="km">1 780 км</span></div>
+      <div class="route-row reveal"><span class="city from">Казань</span><span class="route-line-mini"></span><span class="city to">Новосибирск</span><span class="km">2 460 км</span></div>
+      <div class="route-row reveal"><span class="city from">Ростов-на-Дону</span><span class="route-line-mini"></span><span class="city to">Краснодар</span><span class="km">280 км</span></div>
+      <div class="route-row reveal"><span class="city from">Нижний Новгород</span><span class="route-line-mini"></span><span class="city to">Самара</span><span class="km">460 км</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Тарифы</span>
+      <h2>Прозрачная ставка без доплат</h2>
+      <p>Цена фиксируется в накладной на этапе подтверждения заявки.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="waybill reveal">
+        <span class="doc-id">НАКЛ. № TR-0104-STD</span>
+        <div class="tier">Эконом</div>
+        <div class="price">от 9<span> ₽/км</span></div>
+        <ul>
+          <li>Сборный груз, срок 3–7 дней</li>
+          <li>Стандартное отслеживание</li>
+          <li>Электронная накладная</li>
+        </ul>
+        <a href="#order" class="waybill-cta">Выбрать тариф</a>
+      </div>
+      <div class="waybill featured reveal">
+        <span class="stamp">В СРОК<br>ГАРАНТ</span>
+        <span class="doc-id">НАКЛ. № TR-0104-EXP</span>
+        <div class="tier">Стандарт</div>
+        <div class="price">от 14<span> ₽/км</span></div>
+        <ul>
+          <li>Отдельная машина, срок 1–3 дня</li>
+          <li>GPS-трекинг в реальном времени</li>
+          <li>Персональный менеджер</li>
+          <li>Страхование груза включено</li>
+        </ul>
+        <a href="#order" class="waybill-cta">Выбрать тариф</a>
+      </div>
+      <div class="waybill reveal">
+        <span class="doc-id">НАКЛ. № TR-0104-OOG</span>
+        <div class="tier">Негабарит</div>
+        <div class="price">по запросу</div>
+        <ul>
+          <li>Спецтранспорт и трал</li>
+          <li>Сопровождение и согласования</li>
+          <li>Индивидуальный расчёт</li>
+        </ul>
+        <a href="#order" class="waybill-cta">Запросить расчёт</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="reviews">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Отзывы</span>
+      <h2>Что говорят те, кто уже возит с нами</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <p class="quote">«За два года — ни одной сорванной отгрузки. Даже в декабре, когда все остальные переносят сроки.»</p>
+        <div class="who"><b>Ирина Соколова</b>Логист, мебельное производство</div>
+      </div>
+      <div class="test-card reveal">
+        <p class="quote">«Возим негабарит раз в квартал — раньше это был отдельный головняк. Теперь просто оставляем заявку.»</p>
+        <div class="who"><b>Алексей Дронов</b>Директор, завод металлоконструкций</div>
+      </div>
+      <div class="test-card reveal">
+        <p class="quote">«Трекинг в кабинете реально работает — координаты машины видно, а не «уточню у водителя».»</p>
+        <div class="who"><b>Марина Ким</b>Закупки, розничная сеть</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="order" id="order">
+  <div class="wrap order-inner">
+    <div class="reveal">
+      <span class="eyebrow">Заявка</span>
+      <h2>Рассчитаем стоимость за 15 минут</h2>
+      <p>Оставьте маршрут и вес груза — перезвоним и зафиксируем ставку.</p>
+      <div class="order-contact" id="order-phone">+7 (495) 000-00-00</div>
+      <div class="order-contact" id="order-email">заявки@magistral-cargo.ru</div>
+    </div>
+    <form id="orderForm" class="reveal">
+      <div class="row-2">
+        <div class="field"><label for="fromCity">Откуда</label><input id="fromCity" name="Откуда" type="text" placeholder="Город отправления" required></div>
+        <div class="field"><label for="toCity">Куда</label><input id="toCity" name="Куда" type="text" placeholder="Город назначения" required></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label for="weight">Вес груза, кг</label><input id="weight" name="Вес груза (кг)" type="number" placeholder="500" required></div>
+        <div class="field"><label for="phone">Телефон</label><input id="phone" name="Телефон" type="tel" placeholder="+7 900 000-00-00" required></div>
+      </div>
+      <div class="field"><label for="name">Имя</label><input id="name" name="Имя" type="text" placeholder="Как к вам обращаться" required></div>
+      <button type="submit" class="submit-btn">Отправить заявку</button>
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="brand">МАГИСТРАЛЬ · грузоперевозки</div>
+      <div class="footer-links">
+        <a href="#services">Услуги</a>
+        <a href="#routes">Маршруты</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#order">Заявка</a>
+      </div>
+    </div>
+    <div>© 2026 Магистраль. Все права защищены.</div>
+    <div class="disclaimer">Это демонстрационный сайт-шаблон. Реквизиты, тарифы и отзывы — примерные, замените на свои перед публикацией.</div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const WEB3FORMS_KEY = '8fe1f513-12f6-4859-82f1-22870f27e538';
+
+  const form = document.getElementById('orderForm');
+  const msg = document.getElementById('formMsg');
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+
+    msg.textContent = 'Отправляем заявку…';
+    const data = new FormData(form);
+    data.append('access_key', WEB3FORMS_KEY);
+    data.append('subject', 'Новая заявка с сайта Магистраль');
+
+    try{
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: data
+      });
+      const result = await res.json();
+      if(result.success){
+        msg.textContent = `Спасибо, ${name || 'заявка принята'}! Мы получили заявку и скоро перезвоним.`;
+        msg.classList.add('ok');
+        form.reset();
+      } else {
+        msg.textContent = 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.';
+        msg.classList.remove('ok');
+      }
+    } catch(err){
+      msg.textContent = 'Ошибка соединения. Проверьте интернет и попробуйте снова.';
+      msg.classList.remove('ok');
+    }
+  });
+</script>
+</body>
+</html>
